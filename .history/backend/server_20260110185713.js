@@ -78,7 +78,7 @@ app.use((req, res) => {
   });
 });
 app.get("/", (req, res) => {
-  res.send("Welcome To AI Platform API");
+  res.send("Welcome To Ocean API");
 });
 
 // //generic error

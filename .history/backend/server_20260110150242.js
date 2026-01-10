@@ -77,9 +77,6 @@ app.use((req, res) => {
     statusCode: 404,
   });
 });
-app.get("/", (req, res) => {
-  res.send("Welcome To AI Platform API");
-});
 
 // //generic error
 // app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
