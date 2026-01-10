@@ -18,6 +18,7 @@ export default async function handler(req, res) {
   res.json({ text: data.text });
 }
 
+
 const processPDF = async (id, path) => {
   try {
     const buffer = await getBlobBuffer(path);

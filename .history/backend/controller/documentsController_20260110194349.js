@@ -1,22 +1,15 @@
-import fs from "fs";
-import Document from "../model/document.js";
-import { extractTextFromPDF } from "../utils/pdfParser.js";
-import { textChunkFunc } from "../utils/textChunker.js";
-import { Types } from "mongoose";
-import FlashCard from "../model/flashCard.js";
-import Quiz from "../model/quiz.js";
-import { put as BlobPut } from "@vercel/blob";
-import { getBlobBuffer } from "../utils/blobResponse.js";
-import * as pdfParse from "pdf-parse";
-
-const pdf = pdfParse.default;
-
-export default async function handler(req, res) {
-  const buffer = fs.readFileSync("sample.pdf");
-  const data = await pdf(buffer);
-
-  res.json({ text: data.text });
-}
+import fs from 'fs';
+import Document from '../model/document.js';
+import { extractTextFromPDF } from '../utils/pdfParser.js';
+import { textChunkFunc } from '../utils/textChunker.js';
+import { Types } from 'mongoose';
+import FlashCard from '../model/flashCard.js';
+import Quiz from '../model/quiz.js';
+import { put as BlobPut } from '@vercel/blob';
+import { getBlobBuffer } from '../utils/blobResponse.js';
+import pdf from "pdf-parse";
+const data = await pdf(buffer);
+console.log(data.text);
 
 const processPDF = async (id, path) => {
   try {
@@ -30,12 +23,12 @@ const processPDF = async (id, path) => {
     await Document.findByIdAndUpdate(id, {
       extactedText: text,
       chunks: chunks,
-      status: "ready",
+      status: 'ready',
     });
   } catch (err) {
     console.error(`Error processing document ${id}:`, err);
     await Document.findByIdAndUpdate(id, {
-      status: "failed",
+      status: 'failed',
     });
   }
 };
@@ -43,12 +36,16 @@ const processPDF = async (id, path) => {
 //@desc   upload PDF docs
 //route   POST api/documents/upload
 //@access Private
-export const uploadDocument = async (req, res, next) => {
+export const uploadDocument = async (
+  req,
+  res,
+  next
+) => {
   try {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        error: "Please upload a PDF file",
+        error: 'Please upload a PDF file',
         statusCode: 400,
       });
     }
@@ -62,7 +59,7 @@ export const uploadDocument = async (req, res, next) => {
       });
       return res.status(400).json({
         success: false,
-        error: "Please provide a document title",
+        error: 'Please provide a document title',
         statusCode: 400,
       });
     }
@@ -70,10 +67,11 @@ export const uploadDocument = async (req, res, next) => {
     //construct the url for uploaded file
     // const baseUrl: string = `http://localhost:${process.env.PORT || 8000}`;
     // const fileUrl: string = `${baseUrl}/uploads/documents/${req.file.filename}`;
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueSuffix =
+      Date.now() + '-' + Math.round(Math.random() * 1e9);
     const fileName = `${uniqueSuffix}-${req.file.originalname}`;
     const blobResult = await BlobPut(fileName, req.file.buffer, {
-      access: "public",
+      access: 'public',
       token: process.env.BLOB_READ_WRITE_TOKEN,
       contentType: req.file.mimetype,
     });
@@ -85,18 +83,18 @@ export const uploadDocument = async (req, res, next) => {
       fileName: fileName,
       filePath: blobResult.url,
       fileSize: req.file.size,
-      status: "processing",
+      status: 'processing',
     });
 
     //process PDF in bg
     processPDF(document._id.toString(), blobResult.url).catch((err) => {
-      console.error("PDF Processing error", err);
+      console.error('PDF Processing error', err);
     });
 
     res.status(201).json({
       success: true,
       data: document,
-      message: "Document uploaded sucessfully.Processing in progress...",
+      message: 'Document uploaded sucessfully.Processing in progress...',
     });
   } catch (error) {
     //clean up error file
@@ -110,30 +108,34 @@ export const uploadDocument = async (req, res, next) => {
 //@desc   Get all users documents
 //route   GET api/documents/
 //@access Private
-export const getDocuments = async (req, res, next) => {
+export const getDocuments = async (
+  req,
+  res,
+  next
+) => {
   try {
     const documents = await Document.aggregate([
       { $match: { userId: new Types.ObjectId(req.user._id) } },
       {
         $lookup: {
-          from: "flashcards",
-          localField: "_id",
-          foreignField: "documentId",
-          as: "flashcardSets",
+          from: 'flashcards',
+          localField: '_id',
+          foreignField: 'documentId',
+          as: 'flashcardSets',
         },
       },
       {
         $lookup: {
-          from: "quizzes",
-          localField: "_id",
-          foreignField: "documentId",
-          as: "quizzes",
+          from: 'quizzes',
+          localField: '_id',
+          foreignField: 'documentId',
+          as: 'quizzes',
         },
       },
       {
         $addFields: {
-          flashcardCount: { $size: "$flashcardSets" },
-          quizCount: { $size: "$quizzes" },
+          flashcardCount: { $size: '$flashcardSets' },
+          quizCount: { $size: '$quizzes' },
         },
       },
       {
@@ -162,7 +164,11 @@ export const getDocuments = async (req, res, next) => {
 //@desc   Get single users document
 //route   GET api/documents/:id
 //@access Private
-export const getDocument = async (req, res, next) => {
+export const getDocument = async (
+  req,
+  res,
+  next
+) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
@@ -171,7 +177,7 @@ export const getDocument = async (req, res, next) => {
     if (!document) {
       return res.status(404).json({
         success: false,
-        error: "Document not found",
+        error: 'Document not found',
         statusCode: 404,
       });
     }
@@ -207,7 +213,11 @@ export const getDocument = async (req, res, next) => {
 // @desc  Delete docs
 //route   DELETE api/documents/:id
 //@access Private
-export const deleteDocument = async (req, res, next) => {
+export const deleteDocument = async (
+  req,
+  res,
+  next
+) => {
   try {
     const document = await Document.findOne({
       _id: req.params.id,
@@ -217,7 +227,7 @@ export const deleteDocument = async (req, res, next) => {
     if (!document) {
       return res.status(404).json({
         success: false,
-        error: "Document not found",
+        error: 'Document not found',
         statusCode: 404,
       });
     }
@@ -230,7 +240,7 @@ export const deleteDocument = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Document deleted successfully",
+      message: 'Document deleted successfully',
     });
   } catch (error) {
     next(error);

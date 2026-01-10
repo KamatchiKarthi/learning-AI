@@ -11,7 +11,7 @@
   import QuizRouter from "./routes/quizRoutes.js";
   import ProgressRouter from "./routes/progressRouter.js";
 
-  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
+import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
 
   const app = express();
 
