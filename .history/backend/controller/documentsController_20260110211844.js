@@ -7,7 +7,6 @@ import FlashCard from "../model/flashCard.js";
 import Quiz from "../model/quiz.js";
 import { put as BlobPut } from "@vercel/blob";
 import { getBlobBuffer } from "../utils/blobResponse.js";
-import pdf from "pdf-parse";
 
 const pdf = pdfParse.default;
 
