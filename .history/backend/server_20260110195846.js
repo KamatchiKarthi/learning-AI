@@ -15,7 +15,10 @@ import ProgressRouter from "./routes/progressRouter.js";
 const app = express();
 
 //allowed origin
-
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 //Handle CORS
 app.use(
   cors({

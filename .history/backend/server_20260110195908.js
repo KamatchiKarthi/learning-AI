@@ -10,6 +10,17 @@ import flashcardRouter from "./routes/flashCardRoutes.js";
 import AIRouter from "./routes/aiRoutes.js";
 import QuizRouter from "./routes/quizRoutes.js";
 import ProgressRouter from "./routes/progressRouter.js";
+import fs from "fs";
+import * as pdfParse from "pdf-parse";
+
+const pdf = pdfParse.default;
+
+export default async function handler(req, res) {
+  const buffer = fs.readFileSync("file.pdf");
+  const data = await pdf(buffer);
+
+  res.json({ text: data.text });
+}
 
 
 const app = express();
