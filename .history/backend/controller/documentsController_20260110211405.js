@@ -11,14 +11,14 @@ import * as pdfParse from "pdf-parse";
 
 const pdf = pdfParse.default;
 
-// export async function handler(req, res) {
-//   const buffer = fs.readFileSync("file.pdf");
-//   const data = await pdf(buffer);
+export async function handler(req, res) {
+  const buffer = fs.readFileSync("file.pdf");
+  const data = await pdf(buffer);
 
-//   res.json({ text: data.text });
-// }
+  res.json({ text: data.text });
+}
 
-export  async function handler(req, res) {
+export async function handler(req, res) {
   const buffer = fs.readFileSync("sample.pdf");
   const data = await pdf(buffer);
 
