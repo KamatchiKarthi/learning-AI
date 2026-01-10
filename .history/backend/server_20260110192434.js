@@ -1,3 +1,4 @@
+
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
@@ -11,8 +12,11 @@ import AIRouter from "./routes/aiRoutes.js";
 import QuizRouter from "./routes/quizRoutes.js";
 import ProgressRouter from "./routes/progressRouter.js";
 
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
+// // ES6  module__dirname altenative
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
+//initialize express app
 const app = express();
 
 //allowed origin

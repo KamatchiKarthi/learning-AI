@@ -1,3 +1,4 @@
+
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
@@ -11,7 +12,6 @@ import AIRouter from "./routes/aiRoutes.js";
 import QuizRouter from "./routes/quizRoutes.js";
 import ProgressRouter from "./routes/progressRouter.js";
 
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.js";
 
 const app = express();
 
