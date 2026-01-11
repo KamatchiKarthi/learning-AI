@@ -7,6 +7,22 @@ import FlashCard from "../model/flashCard.js";
 import Quiz from "../model/quiz.js";
 import { put as BlobPut } from "@vercel/blob";
 import { getBlobBuffer } from "../utils/blobResponse.js";
+import pdf from "pdf-parse";
+
+
+// export async function handler(req, res) {
+//   const buffer = fs.readFileSync("file.pdf");
+//   const data = await pdf(buffer);
+
+//   res.json({ text: data.text });
+// }
+
+export  async function handler(req, res) {
+  const buffer = fs.readFileSync("sample.pdf");
+  const data = await pdf(buffer);
+
+  res.json({ text: data.text });
+}
 
 const processPDF = async (id, path) => {
   try {
