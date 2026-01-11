@@ -21,8 +21,8 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigin = [
         process.env.CLIENT_URL,
-        "http://localhost:7000",
-        "http://localhost:8000",
+        // "http://localhost:7000",
+        // "http://localhost:8000",
       ];
       if (!origin) return callback(null, true);
       if (allowedOrigin.includes(origin)) {
