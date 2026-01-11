@@ -11,7 +11,6 @@ import AIRouter from "./routes/aiRoutes.js";
 import QuizRouter from "./routes/quizRoutes.js";
 import ProgressRouter from "./routes/progressRouter.js";
 
-
 const app = express();
 
 //allowed origin
@@ -58,6 +57,10 @@ app.use("/api/progress", ProgressRouter);
 //error handler
 app.use(errorHanlder);
 
+app.get("/", (req, res) => {
+  res.send("Welcome To AI Platform API");
+});
+
 //404error
 app.use((req, res) => {
   res.status(404).json({
@@ -66,19 +69,7 @@ app.use((req, res) => {
     statusCode: 404,
   });
 });
-app.get("/", (req, res) => {
-  res.send("Welcome To AI Platform API");
-});
 
-// //generic error
-// app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-//     console.error(err);
-//     res.status(500).json({
-//         success: false,
-//         error: err.message || 'Something went wrong',
-//         statusCode: 500,
-//     });
-// });
 
 //start server
 const PORT = process.env.PORT || 8000;
